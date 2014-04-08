@@ -172,7 +172,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function uPosition(m) {
             //do the following only for other players who are sending messages
-            console.log("Update the position of this guy: " + m.id.substring(0,8) + " " + m.playerName);
+            //console.log("Update the position of this guy: " + m.id.substring(0,8) + " " + m.playerName);
             var index = 0;
             var i = 0;
             if (m.id === client.clientId()) {
@@ -194,7 +194,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                         //if the player sending the message isn't in the allPlayer array, it needs to be spawned in my browser window
                         //console.log("not spawned yet");
                         //console.log(m);
-                        console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + m.playerName);
+                        //console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + m.playerName);
                         spawn(m);
                         break;
                     }
