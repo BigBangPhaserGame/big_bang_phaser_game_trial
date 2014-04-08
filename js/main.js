@@ -33,7 +33,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
     });
 
     function beginGame(client, channel) {
-        var game = new Phaser.Game(1024, 768, Phaser.AUTO, null, {
+        var game = new Phaser.Game(500, 500, Phaser.AUTO, null, {
             preload: preload,
             create: create,
             update: update
@@ -70,14 +70,18 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             myName = prompt("What is your name?");
             var me = {
                 id: client.clientId(),
-                x: 0,
-                y: 0,
+                x: Math.floor(Math.random()*500),
+                y: Math.floor(Math.random()*500),
+                // x: Math.floor(Math.random()*window.innerWidth),
+                // y: Math.floor(Math.random()*window.innerHeight),
                 playerName: myName
             };
+            //me.playerName = prompt("What is your name?");
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
-            
+            //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
                 var m = message.payload.getBytesAsJSON();
+                //console.log("m.id = " + m.id + " and m.playerName = " + m.playerName);
                 //message.payload.getBytesAsJSON appears as, "Object {id: "...long GUID...", x: #, y: #}"
                 //so you can call m.id, m.x, and m.y
                 //console.log("Message: m.id = " + m.id + ", m.x = " + m.x + ", and m.y = " + m.y); //display messages being sent from each channel
@@ -103,6 +107,11 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 myPlayer.y += 3;
                 sendPosition(myPlayer.x, myPlayer.y);
             } 
+
+            //move my player's name label around with my player:
+            myPlayer.label.x = myPlayer.x;
+            myPlayer.label.y = myPlayer.y - 10; //label above player
+
         }
 
         function sendPosition(x, y) {
@@ -118,7 +127,8 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function spawn(m) {
             //console.log("spawn!");
-            //let's distinguish between my player and other people's players
+            //distinguish between my player and other people's players:
+            console.log("Within spawn(m) function, " + m.id.substring(0,8) + "has m.playerName = " + m.playerName);
             if (m.id === client.clientId()) {
                 console.log ("This is me who just spawned. My name is " + m.playerName + " and my id is " + client.clientId());
             } else {
@@ -127,6 +137,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             var label = m.playerName;
             player = game.add.sprite(m.x, m.y, 'char');
             player.id = m.id;
+            player.playerName = m.playerName;
             player.animations.add('down', [0, 1, 2], 10);
             player.animations.add('left', [12, 13, 14], 10);
             player.animations.add('right', [24, 25, 26], 10);
@@ -136,11 +147,12 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log("Sent the initial position info!");
             //console.log(player.id + " is at coordinate " + "(" + player.x + ", " + player.y + ")");
             allPlayers.push(player); //add the newly spawned player to the allPlayers array
+            player.label = game.add.text(player.x, player.y - 10, label, style);
             if (m.id === client.clientId()) {
                 //now that my player has all the player object properties loaded, let's change his name to myPlayer to distinguish him in future commands
                 myPlayer = player;
             }
-            player.label = game.add.text(player.x, player.y - 10, label, style);
+            
             
             //console.log("length of allPlayers = " + allPlayers.length);
             return player;
