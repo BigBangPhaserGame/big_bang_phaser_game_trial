@@ -38,3 +38,6 @@ http://www.localhost.dev/Big_Bang_Phaser_Project/big_bang_phaser_game/
 Big_Bang_Phaser_Project.dev/big_bang_phaser_game/
 http://www.Big_Bang_Phaser_Project.dev/big_bang_phaser_game/
 
+=====================
+This (trial postscript) is a demo version for John and Cole to mess with without effecting the working file (without the trial postscript).
+
