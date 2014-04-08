@@ -83,7 +83,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
                 var m = message.payload.getBytesAsJSON();
-                console.log(m.playerName);
+                //console.log(m.playerName);
                 //console.log("m.id = " + m.id + " and m.playerName = " + m.playerName);
                 //message.payload.getBytesAsJSON appears as, "Object {id: "...long GUID...", x: #, y: #}"
                 //so you can call m.id, m.x, and m.y
