@@ -87,7 +87,6 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 //so you can call m.id, m.x, and m.y
                 //console.log("Message: m.id = " + m.id + ", m.x = " + m.x + ", and m.y = " + m.y); //display messages being sent from each channel
                 uPosition(m);
-                console.log("this is create" + m.x);
             }
         }  
 
