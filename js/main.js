@@ -1,4 +1,3 @@
-            console.log(left +" left");
 require.config({
     baseUrl: '/Big_Bang_Phaser_Project',
         // set baseURL to 'js' when bbclient.min.js is in the folder entitled 'js' along with main.js, phaser.min.js, and require.js
@@ -68,12 +67,17 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function create() {
             game.stage.backgroundColor = '#9966FF';
-            playerName = prompt("What is your name?");
-            spawn(client.clientId()); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
-
+            myName = prompt("What is your name?");
+            var me = {
+                id: client.clientId(),
+                x: 0,
+                y: 0,
+                playerName: myName
+            };
+            spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
+            
             channel.handler = function (message) {
                 var m = message.payload.getBytesAsJSON();
-                var m.playerName;
                 //message.payload.getBytesAsJSON appears as, "Object {id: "...long GUID...", x: #, y: #}"
                 //so you can call m.id, m.x, and m.y
                 //console.log("Message: m.id = " + m.id + ", m.x = " + m.x + ", and m.y = " + m.y); //display messages being sent from each channel
@@ -106,6 +110,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             pos.id = client.clientId();
             pos.x = x;
             pos.y = y;
+            //pos.playerName = playerName;
 
             channel.publish(pos);
             //console.log(pos);
@@ -115,12 +120,12 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log("spawn!");
             //let's distinguish between my player and other people's players
             if (m.id === client.clientId()) {
-                console.log ("This is me who just spawned. My id is " + client.clientId());
+                console.log ("This is me who just spawned. My name is " + m.playerName + " and my id is " + client.clientId());
             } else {
-                console.log("Player " + m.id + " just spawned a char sprite with a label");
+                console.log("A player of the name " + m.playerName + " and id of " + m.id + " just spawned a char sprite with a label");
             }
-            var label = m.id.substring(0, 8); //shorten the label to display just the first 8 characters of the GUID
-            player = game.add.sprite(0, 0, 'char');
+            var label = m.playerName;
+            player = game.add.sprite(m.x, m.y, 'char');
             player.id = m.id;
             player.animations.add('down', [0, 1, 2], 10);
             player.animations.add('left', [12, 13, 14], 10);
@@ -134,9 +139,9 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             if (m.id === client.clientId()) {
                 //now that my player has all the player object properties loaded, let's change his name to myPlayer to distinguish him in future commands
                 myPlayer = player;
-            } else {
-                player.label = game.add.text(player.x, player.y - 10, label, style);
             }
+            player.label = game.add.text(player.x, player.y - 10, label, style);
+            
             //console.log("length of allPlayers = " + allPlayers.length);
             return player;
         }
@@ -160,7 +165,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                     if(index >= allPlayers.length) { //the allPlayers array will be shorter in a user's browser window where the message-sending player has not yet been spawned
                         //if the player sending the message isn't in the allPlayer array, it needs to be spawned in my browser window
                         //console.log("not spawned yet");
-                        spawn(m.id);
+                        spawn(m);
                         break;
                     }
                 } while (i < allPlayers.length);
