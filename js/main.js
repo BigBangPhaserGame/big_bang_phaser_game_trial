@@ -63,7 +63,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         var allPlayers = new Array();
 
         function preload() {
-            game.load.spritesheet('char', 'images/char01.png', 32, 48);
+            game.load.spritesheet('char', 'images/char01.png', 32, 48) // define where avatar can be found. Because avatars are in a spritesheet with completely identical rectangular dimensions, just need to define 32 x 48 box to equal 1 avatar.
         }
 
         function create() {
@@ -76,7 +76,10 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 // x: Math.floor(Math.random()*window.innerWidth),
                 // y: Math.floor(Math.random()*window.innerHeight),
             };
+<<<<<<< HEAD
+=======
             me.playerName = playerName;
+>>>>>>> John-DiBaggio
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
@@ -99,7 +102,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 //move my player's name label around with my player in my own window:
                 myPlayer.label.x = myPlayer.x;
                 myPlayer.label.y = myPlayer.y - 10; //label above player
-                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
+                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName); //sendPosition is a function defined below.
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
                 myPlayer.animations.play('right');
                 myPlayer.x += 3;
