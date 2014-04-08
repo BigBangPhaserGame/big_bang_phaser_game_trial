@@ -42,6 +42,8 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         //keep track of when players join (open the browser window) and leave (close the browser window):
         //function onSubscribers(joinFunction(joined);, leaveFunction(left);){}
         //here, joined and left are both id's (each is a GUID), of a player joining and leaving, respectively
+        
+        //NEED TO FIX THE KILL FUNCTION
         /*channel.onSubscribers(function(joined){
             console.log(joined +" joined");
             spawn(joined);
@@ -206,7 +208,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 return;
             }
         }
-
+        //NEED TO FIX THE KILL FUNCTION
         function kill(left) {
             //console.log("kill!");
             var kIndex = 0;
