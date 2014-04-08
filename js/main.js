@@ -68,7 +68,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function create() {
             game.stage.backgroundColor = '#9966FF';
-            myName = prompt("What is your name?");
+            var myName = prompt("What is your name?");
             var me = {
                 id: client.clientId(),
                 x: Math.floor(Math.random()*500),
