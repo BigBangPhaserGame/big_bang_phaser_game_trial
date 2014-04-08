@@ -76,10 +76,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 // x: Math.floor(Math.random()*window.innerWidth),
                 // y: Math.floor(Math.random()*window.innerHeight),
             };
-<<<<<<< HEAD
-=======
             me.playerName = playerName;
->>>>>>> John-DiBaggio
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
@@ -99,14 +96,10 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
                 myPlayer.animations.play('left');
                 myPlayer.x -= 3;
-<<<<<<< HEAD
-                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
-=======
                 //move my player's name label around with my player in my own window:
                 myPlayer.label.x = myPlayer.x;
                 myPlayer.label.y = myPlayer.y - 10; //label above player
                 sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName); //sendPosition is a function defined below.
->>>>>>> master
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
                 myPlayer.animations.play('right');
                 myPlayer.x += 3;
