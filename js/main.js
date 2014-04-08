@@ -1,3 +1,4 @@
+            console.log(left +" left");
 require.config({
     baseUrl: '/Big_Bang_Phaser_Project',
         // set baseURL to 'js' when bbclient.min.js is in the folder entitled 'js' along with main.js, phaser.min.js, and require.js
@@ -6,7 +7,6 @@ require.config({
         "BigBangClient": "bbclient.min"
     }
 });
-
 
 require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
@@ -43,13 +43,13 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         //keep track of when players join (open the browser window) and leave (close the browser window):
         //function onSubscribers(joinFunction(joined);, leaveFunction(left);){}
         //here, joined and left are both id's (each is a GUID), of a player joining and leaving, respectively
-        channel.onSubscribers(function(joined){
+        /*channel.onSubscribers(function(joined){
             console.log(joined +" joined");
             spawn(joined);
         },function(left){
             console.log(left +" left");
             kill(left);
-        });
+        });*/
 
         var myPlayer, //my player
             label,
@@ -57,6 +57,8 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 font: "12px Arial",
                 fill: "#ffffff"
             } //styling players labels a bit
+
+        var playerName;
 
         var allPlayers = new Array();
 
@@ -66,11 +68,12 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function create() {
             game.stage.backgroundColor = '#9966FF';
-
+            playerName = prompt("What is your name?");
             spawn(client.clientId()); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
-            
+
             channel.handler = function (message) {
                 var m = message.payload.getBytesAsJSON();
+                var m.playerName;
                 //message.payload.getBytesAsJSON appears as, "Object {id: "...long GUID...", x: #, y: #}"
                 //so you can call m.id, m.x, and m.y
                 //console.log("Message: m.id = " + m.id + ", m.x = " + m.x + ", and m.y = " + m.y); //display messages being sent from each channel
@@ -108,27 +111,27 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log(pos);
         }
 
-        function spawn(id) {
+        function spawn(m) {
             //console.log("spawn!");
             //let's distinguish between my player and other people's players
-            if (id === client.clientId()) {
+            if (m.id === client.clientId()) {
                 console.log ("This is me who just spawned. My id is " + client.clientId());
             } else {
-                console.log("Player " + id + " just spawned a char sprite with a label");
+                console.log("Player " + m.id + " just spawned a char sprite with a label");
             }
-            var label = id.substring(0, 8); //shorten the label to display just the first 8 characters of the GUID
+            var label = m.id.substring(0, 8); //shorten the label to display just the first 8 characters of the GUID
             player = game.add.sprite(0, 0, 'char');
-            player.id = id;
+            player.id = m.id;
             player.animations.add('down', [0, 1, 2], 10);
             player.animations.add('left', [12, 13, 14], 10);
             player.animations.add('right', [24, 25, 26], 10);
             player.animations.add('up', [36, 37, 38], 10);
             player.body.collideWorldBounds = true;
-            sendPosition(player.x, player.y);
+            sendPosition(m.x, m.y);
             //console.log("Sent the initial position info!");
             //console.log(player.id + " is at coordinate " + "(" + player.x + ", " + player.y + ")");
             allPlayers.push(player); //add the newly spawned player to the allPlayers array
-            if (id === client.clientId()) {
+            if (m.id === client.clientId()) {
                 //now that my player has all the player object properties loaded, let's change his name to myPlayer to distinguish him in future commands
                 myPlayer = player;
             } else {
