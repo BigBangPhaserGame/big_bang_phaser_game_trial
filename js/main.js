@@ -95,11 +95,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
                 myPlayer.animations.play('left');
                 myPlayer.x -= 3;
-<<<<<<< HEAD
-                sendPosition(myPlayer.x, myPlayer.y); //sendPosition is a function defined below.
-=======
-                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
->>>>>>> John-DiBaggio
+                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName); //sendPosition is a function defined below.
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
                 myPlayer.animations.play('right');
                 myPlayer.x += 3;
