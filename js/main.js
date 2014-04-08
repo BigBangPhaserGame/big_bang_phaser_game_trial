@@ -64,7 +64,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         var allPlayers = new Array();
 
         function preload() {
-            game.load.spritesheet('char', 'images/char01.png', 32, 48);
+            game.load.spritesheet('char', 'images/char01.png', 32, 48) // define where avatar can be found. Because avatars are in a spritesheet with completely identical rectangular dimensions, just need to define 32 x 48 box to equal 1 avatar.
         }
 
         function create() {
@@ -78,7 +78,6 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 // y: Math.floor(Math.random()*window.innerHeight),
                 playerName: myName
             };
-            //me.playerName = prompt("What is your name?");
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
@@ -88,6 +87,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 //so you can call m.id, m.x, and m.y
                 //console.log("Message: m.id = " + m.id + ", m.x = " + m.x + ", and m.y = " + m.y); //display messages being sent from each channel
                 uPosition(m);
+                console.log("this is create" + m.x);
             }
         }  
 
@@ -95,7 +95,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
                 myPlayer.animations.play('left');
                 myPlayer.x -= 3;
-                sendPosition(myPlayer.x, myPlayer.y);
+                sendPosition(myPlayer.x, myPlayer.y); //sendPosition is a function defined below.
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
                 myPlayer.animations.play('right');
                 myPlayer.x += 3;
