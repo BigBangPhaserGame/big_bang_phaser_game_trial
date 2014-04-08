@@ -43,14 +43,13 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         //function onSubscribers(joinFunction(joined);, leaveFunction(left);){}
         //here, joined and left are both id's (each is a GUID), of a player joining and leaving, respectively
         
-        //NEED TO FIX THE KILL FUNCTION
-        /*channel.onSubscribers(function(joined){
-            console.log(joined +" joined");
-            spawn(joined);
+        channel.onSubscribers(function(joined){
+            /*console.log(joined +" joined");
+            spawn(joined);*/
         },function(left){
             console.log(left +" left");
             kill(left);
-        });*/
+        });
 
         var myPlayer, //my player
             label,
@@ -69,7 +68,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function create() {
             game.stage.backgroundColor = '#9966FF';
-            myName = prompt("What is your name?");
+            var myName = prompt("What is your name?");
             var me = {
                 id: client.clientId(),
                 x: Math.floor(Math.random()*500),
@@ -82,6 +81,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
                 var m = message.payload.getBytesAsJSON();
+                //m.playerName;
                 //console.log("m.id = " + m.id + " and m.playerName = " + m.playerName);
                 //message.payload.getBytesAsJSON appears as, "Object {id: "...long GUID...", x: #, y: #}"
                 //so you can call m.id, m.x, and m.y
@@ -94,19 +94,23 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
                 myPlayer.animations.play('left');
                 myPlayer.x -= 3;
+<<<<<<< HEAD
                 sendPosition(myPlayer.x, myPlayer.y); //sendPosition is a function defined below.
+=======
+                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
+>>>>>>> John-DiBaggio
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
                 myPlayer.animations.play('right');
                 myPlayer.x += 3;
-                sendPosition(myPlayer.x, myPlayer.y);
+                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
                 myPlayer.animations.play('up');
                 myPlayer.y -= 3;
-                sendPosition(myPlayer.x, myPlayer.y);
+                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
             } else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
                 myPlayer.animations.play('down');
                 myPlayer.y += 3;
-                sendPosition(myPlayer.x, myPlayer.y);
+                sendPosition(myPlayer.x, myPlayer.y, myPlayer.playerName);
             } 
 
             //move my player's name label around with my player:
@@ -115,12 +119,12 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         }
 
-        function sendPosition(x, y) {
+        function sendPosition(x, y, playerName) {
             var pos = {}; //create pos object to hold my players's id and position's x and y coordinate
             pos.id = client.clientId();
             pos.x = x;
             pos.y = y;
-            //pos.playerName = playerName;
+            pos.playerName = playerName;
 
             channel.publish(pos);
             //console.log(pos);
@@ -144,16 +148,18 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             player.animations.add('right', [24, 25, 26], 10);
             player.animations.add('up', [36, 37, 38], 10);
             player.body.collideWorldBounds = true;
-            sendPosition(m.x, m.y);
+            sendPosition(m.x, m.y, m.playerName);
+            player.x = m.x;
+            player.y = m.y;
             //console.log("Sent the initial position info!");
             //console.log(player.id + " is at coordinate " + "(" + player.x + ", " + player.y + ")");
             allPlayers.push(player); //add the newly spawned player to the allPlayers array
             player.label = game.add.text(player.x, player.y - 10, label, style);
+            console.log(player);
             if (m.id === client.clientId()) {
                 //now that my player has all the player object properties loaded, let's change his name to myPlayer to distinguish him in future commands
                 myPlayer = player;
             }
-            
             
             //console.log("length of allPlayers = " + allPlayers.length);
             return player;
@@ -207,7 +213,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 return;
             }
         }
-        //NEED TO FIX THE KILL FUNCTION
+
         function kill(left) {
             //console.log("kill!");
             var kIndex = 0;
