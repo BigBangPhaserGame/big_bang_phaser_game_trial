@@ -76,13 +76,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 // x: Math.floor(Math.random()*window.innerWidth),
                 // y: Math.floor(Math.random()*window.innerHeight),
             };
-<<<<<<< HEAD
             me.playerName = playerName;
-=======
-
-            me.playerName = playerName;
-
->>>>>>> master
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
