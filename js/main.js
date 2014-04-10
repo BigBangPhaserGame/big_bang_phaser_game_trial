@@ -170,9 +170,6 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //do the following only for other players who are sending messages
             var index = 0;
             var i = 0;
-            if (mPosition.id === client.clientId()) {
-                client.playerName = mPosition.playerName;
-            }
             if (mPosition.id != client.clientId()) {
                 //console.log("message id does not equal client id");   
                 do {
