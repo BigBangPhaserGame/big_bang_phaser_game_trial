@@ -43,7 +43,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         //function onSubscribers(joinFunction(joined);, leaveFunction(left);){}
         //here, joined and left are both id's (each is a GUID), of a player joining and leaving, respectively
         
-        channel.onSubscribers(function(joined){
+        channel.onSubscribers(function (joined) {
             /*console.log(joined +" joined");
             spawn(joined);*/
         },function(left){
@@ -73,11 +73,11 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 id: client.clientId(),
                 x: Math.floor(Math.random()*500),
                 y: Math.floor(Math.random()*500),
+                playerName: playerName
                 // x: Math.floor(Math.random()*window.innerWidth),
                 // y: Math.floor(Math.random()*window.innerHeight),
                 playerName: playerName
             };
-
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
@@ -130,7 +130,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             pos.y = y;
             pos.playerName = posName;
 
-            channel.publish(pos);
+            channel.publish(pos); // pos will become the (message) parameter in channel.handler once it is received by another computer.
             //console.log(pos);
         }
 
@@ -138,18 +138,18 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log("spawn!");
             //distinguish between my player and other people's players:
             //console.log("Within spawn(m) function, " + m.id.substring(0,8) + " has m.playerName = " + m.playerName);
-            var label = m.playerName;
-            player = game.add.sprite(m.x, m.y, 'char');
+            var label = m.playerName; // label is what we defined earlier with prompt
+            player = game.add.sprite(m.x, m.y, 'char'); // Attaches x, y, as properties to "player" object
             player.id = m.id;
             player.playerName = m.playerName;
             player.animations.add('down', [0, 1, 2], 10);
             player.animations.add('left', [12, 13, 14], 10);
             player.animations.add('right', [24, 25, 26], 10);
             player.animations.add('up', [36, 37, 38], 10);
-            player.body.collideWorldBounds = true;
+            player.body.collideWorldBounds = true; // player object now has properties of: x, y, id, playerName, animations, body
             player.label = game.add.text(player.x, player.y - 10, label, style);
             sendPosition(m.x, m.y, m.playerName);
-            //player.x = m.x;
+            //player.x = m.x; Redundant because attached earlier in game.add.sprite
             //player.y = m.y;
             //console.log("Sent the initial position info!");
             //console.log(player.id + " is at coordinate " + "(" + player.x + ", " + player.y + ")");
@@ -163,7 +163,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 console.log("A player of the name " + m.playerName + " and id of " + m.id + " just spawned a char sprite with a label");
             }
             //console.log("length of allPlayers = " + allPlayers.length);
-            return;
+            return; //player; // Why do we return a value if, in create function when called, there's no declared variable that this returned valie is equal to?
         }
 
         function uPosition(m) {
@@ -198,7 +198,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 } while (i < allPlayers.length);
 
                 if (index != 0) {
-                    if (allPlayers[index].x > m.x) {
+                    if (allPlayers[index].x > m.x) { // Is the message for the player  allplayers[index] on the screen farther left than what our screen says, then do the "left animation" defined in update and create function
                         allPlayers[index].animations.play('left');                
                     } else if (allPlayers[index].x < m.x) {
                         allPlayers[index].animations.play('right');             
@@ -208,7 +208,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                         allPlayers[index].animations.play('down');
                     }
             
-                    allPlayers[index].x = allPlayers[index].label.x = m.x;
+                    allPlayers[index].x = allPlayers[index].label.x = m.x; // set players position and label equal to what the message says for the x and y coordinates.
                     allPlayers[index].y = m.y;
                     allPlayers[index].label.y = m.y - 10; //label above player
                 } else {
