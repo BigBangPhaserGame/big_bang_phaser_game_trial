@@ -76,13 +76,11 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                 playerName: playerName
                 // x: Math.floor(Math.random()*window.innerWidth),
                 // y: Math.floor(Math.random()*window.innerHeight),
-                playerName: playerName
             };
             spawn(me); //add the sprite for the player in my window, which has the id of client.clientId(). Note, it won't have the 'joined' id
             //console.log("me.playerName = " + me.playerName);
             channel.handler = function (message) {
                 var m = message.payload.getBytesAsJSON();
-                console.log(m.playerName);
                 //console.log("m.id = " + m.id + " and m.playerName = " + m.playerName);
                 //message.payload.getBytesAsJSON appears as, "Object {id: "...long GUID...", x: #, y: #}"
                 //so you can call m.id, m.x, and m.y
@@ -134,50 +132,49 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             //console.log(pos);
         }
 
-        function spawn(m) {
+        function spawn(mSpawn) {
             //console.log("spawn!");
             //distinguish between my player and other people's players:
             //console.log("Within spawn(m) function, " + m.id.substring(0,8) + " has m.playerName = " + m.playerName);
-            var label = m.playerName; // label is what we defined earlier with prompt
-            player = game.add.sprite(m.x, m.y, 'char'); // Attaches x, y, as properties to "player" object
-            player.id = m.id;
-            player.playerName = m.playerName;
+            var label = mSpawn.playerName; // label is what we defined earlier with prompt
+            player = game.add.sprite(mSpawn.x, mSpawn.y, 'char'); // Attaches x, y, as properties to "player" object
+            player.id = mSpawn.id;
+            player.playerName = mSpawn.playerName;
             player.animations.add('down', [0, 1, 2], 10);
             player.animations.add('left', [12, 13, 14], 10);
             player.animations.add('right', [24, 25, 26], 10);
             player.animations.add('up', [36, 37, 38], 10);
             player.body.collideWorldBounds = true; // player object now has properties of: x, y, id, playerName, animations, body
             player.label = game.add.text(player.x, player.y - 10, label, style);
-            sendPosition(m.x, m.y, m.playerName);
+            sendPosition(mSpawn.x, mSpawn.y, mSpawn.playerName);
             //player.x = m.x; Redundant because attached earlier in game.add.sprite
             //player.y = m.y;
             //console.log("Sent the initial position info!");
             //console.log(player.id + " is at coordinate " + "(" + player.x + ", " + player.y + ")");
             allPlayers.push(player); //add the newly spawned player to the allPlayers array
             //console.log(player);
-            if (m.id === client.clientId()) {
+            if (mSpawn.id === client.clientId()) {
                 //now that my player has all the player object properties loaded, let's change his name to myPlayer to distinguish him in future commands
-                console.log ("This is me who just spawned. My name is " + m.playerName + " and my id is " + client.clientId());
+                console.log ("This is me who just spawned. My name is " + mSpawn.playerName + " and my id is " + client.clientId());
                 myPlayer = player;
             } else {
-                console.log("A player of the name " + m.playerName + " and id of " + m.id + " just spawned a char sprite with a label");
+                console.log("A player of the name " + mSpawn.playerName + " and id of " + mSpawn.id + " just spawned a char sprite with a label");
             }
             //console.log("length of allPlayers = " + allPlayers.length);
             return; //player; // Why do we return a value if, in create function when called, there's no declared variable that this returned valie is equal to?
         }
 
-        function uPosition(m) {
+        function uPosition(mPosition) {
             //do the following only for other players who are sending messages
-            console.log("Update the position of this guy: " + m.id.substring(0,8) + " " + m.playerName);
             var index = 0;
             var i = 0;
-            if (m.id === client.clientId()) {
-                client.playerName = m.playerName;
+            if (mPosition.id === client.clientId()) {
+                client.playerName = mPosition.playerName;
             }
-            if (m.id != client.clientId()) {
+            if (mPosition.id != client.clientId()) {
                 //console.log("message id does not equal client id");   
                 do {
-                    if(allPlayers[i].id === m.id) {
+                    if(allPlayers[i].id === mPosition.id) {
                         //console.log("Found a match in the allPlayers array");
                         index = i;
                         break; 
@@ -190,27 +187,27 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                         //if the player sending the message isn't in the allPlayer array, it needs to be spawned in my browser window
                         //console.log("not spawned yet");
                         //console.log(m);
-                        console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + m.playerName);
-                        spawn(m);
+                        console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + mPosition.playerName);
+                        spawn(mPosition);
                         //console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + m.playerName);
                         break;
                     }
                 } while (i < allPlayers.length);
 
                 if (index != 0) {
-                    if (allPlayers[index].x > m.x) { // Is the message for the player  allplayers[index] on the screen farther left than what our screen says, then do the "left animation" defined in update and create function
+                    if (allPlayers[index].x > mPosition.x) { // Is the message for the player  allplayers[index] on the screen farther left than what our screen says, then do the "left animation" defined in update and create function
                         allPlayers[index].animations.play('left');                
-                    } else if (allPlayers[index].x < m.x) {
+                    } else if (allPlayers[index].x < mPosition.x) {
                         allPlayers[index].animations.play('right');             
-                    } else if (allPlayers[index].y > m.y) {
+                    } else if (allPlayers[index].y > mPosition.y) {
                         allPlayers[index].animations.play('up');
                     } else {
                         allPlayers[index].animations.play('down');
                     }
             
-                    allPlayers[index].x = allPlayers[index].label.x = m.x; // set players position and label equal to what the message says for the x and y coordinates.
-                    allPlayers[index].y = m.y;
-                    allPlayers[index].label.y = m.y - 10; //label above player
+                    allPlayers[index].x = allPlayers[index].label.x = mPosition.x; // set players position and label equal to what the message says for the x and y coordinates.
+                    allPlayers[index].y = mPosition.y;
+                    allPlayers[index].label.y = mPosition.y - 10; //label above player
                 } else {
                     return;
                 }
