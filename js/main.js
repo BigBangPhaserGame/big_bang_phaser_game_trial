@@ -138,7 +138,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         function spawn(mSpawn) {
             //console.log("spawn!");
             //distinguish between my player and other people's players:
-            console.log("Within spawn(m) function, " + mSpawn.id.substring(0,8) + " has mSpawn.playerName = " + mSpawn.playerName);
+            //console.log("Within spawn(m) function, " + mSpawn.id.substring(0,8) + " has mSpawn.playerName = " + mSpawn.playerName);
             var label = mSpawn.playerName; // label is what we defined earlier with prompt
             player = game.add.sprite(mSpawn.x, mSpawn.y, 'char'); // Attaches x, y, as properties to "player" object
             player.id = mSpawn.id;
@@ -168,7 +168,6 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function uPosition(mPosition) {
             //do the following only for other players who are sending messages
-            console.log(mPosition);
             var index = 0;
             var i = 0;
             if (mPosition.id === client.clientId()) {
@@ -189,10 +188,8 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                     if(index >= allPlayers.length) { //the allPlayers array will be shorter in a user's browser window where the message-sending player has not yet been spawned
                         //if the player sending the message isn't in the allPlayer array, it needs to be spawned in my browser window
                         //console.log("not spawned yet");
-                        //console.log(mPosition);
-                        console.log("Need to first spawn this guy: " + mPosition.id.substring(0,8) + " " + mPosition.playerName);
-                        spawn(mPosition);
                         //console.log("Need to first spawn this guy: " + mPosition.id.substring(0,8) + " " + mPosition.playerName);
+                        spawn(mPosition);
                         break;
                     }
                 } while (i < allPlayers.length);
