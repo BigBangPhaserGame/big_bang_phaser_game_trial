@@ -168,7 +168,6 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
 
         function uPosition(mPosition) {
             //do the following only for other players who are sending messages
-            console.log(mPosition);
             var index = 0;
             var i = 0;
             if (mPosition.id === client.clientId()) {
