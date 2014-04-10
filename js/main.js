@@ -135,7 +135,7 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
         function spawn(mSpawn) {
             //console.log("spawn!");
             //distinguish between my player and other people's players:
-            //console.log("Within spawn(m) function, " + m.id.substring(0,8) + " has m.playerName = " + m.playerName);
+            //console.log("Within spawn(m) function, " + mSpwan.id.substring(0,8) + " has mSpawn.playerName = " + mSpawn.playerName);
             var label = mSpawn.playerName; // label is what we defined earlier with prompt
             player = game.add.sprite(mSpawn.x, mSpawn.y, 'char'); // Attaches x, y, as properties to "player" object
             player.id = mSpawn.id;
@@ -147,8 +147,8 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
             player.body.collideWorldBounds = true; // player object now has properties of: x, y, id, playerName, animations, body
             player.label = game.add.text(player.x, player.y - 10, label, style);
             sendPosition(mSpawn.x, mSpawn.y, mSpawn.playerName);
-            //player.x = m.x; Redundant because attached earlier in game.add.sprite
-            //player.y = m.y;
+            //player.x = mSpawn.x; Redundant because attached earlier in game.add.sprite
+            //player.y = mSpawn.y;
             //console.log("Sent the initial position info!");
             //console.log(player.id + " is at coordinate " + "(" + player.x + ", " + player.y + ")");
             allPlayers.push(player); //add the newly spawned player to the allPlayers array
@@ -187,9 +187,9 @@ require(['BigBangClient', 'BrowserBigBangClient'], function (bb, bbw) {
                         //if the player sending the message isn't in the allPlayer array, it needs to be spawned in my browser window
                         //console.log("not spawned yet");
                         //console.log(m);
-                        console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + mPosition.playerName);
+                        console.log("Need to first spawn this guy: " + mPosition.id.substring(0,8) + " " + mPosition.playerName);
                         spawn(mPosition);
-                        //console.log("Need to first spawn this guy: " + m.id.substring(0,8) + " " + m.playerName);
+                        //console.log("Need to first spawn this guy: " + mPosition.id.substring(0,8) + " " + mPosition.playerName);
                         break;
                     }
                 } while (i < allPlayers.length);
